@@ -1,0 +1,42 @@
+{
+  "originHash" : "ad7d4888c44533f18f8d18b2f5f69bf9b8495705a112225e6ef039a6a0cd8b92",
+  "pins" : [
+    {
+      "identity" : "csv.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yaslab/CSV.swift",
+      "state" : {
+        "revision" : "b4371dc833ba22ab6ead90fb63d267c3cf9ce773",
+        "version" : "2.5.2"
+      }
+    },
+    {
+      "identity" : "gzipswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/1024jp/GzipSwift",
+      "state" : {
+        "revision" : "7a7f17761c76a932662ab77028a4329f67d645a4",
+        "version" : "5.2.0"
+      }
+    },
+    {
+      "identity" : "influxdb-client-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/influxdata/influxdb-client-swift.git",
+      "state" : {
+        "revision" : "6f79af75a7958142add2e811dc0a6a6ae6507bd2",
+        "version" : "1.7.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
+        "version" : "1.6.4"
+      }
+    }
+  ],
+  "version" : 3
+}
