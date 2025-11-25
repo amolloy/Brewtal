@@ -16,6 +16,12 @@ struct BrewtalAll: App {
                     .tabItem {
                         Label("BrewVision Thermometer", systemImage: "thermometer")
                     }
+				NavigationView {
+					TiltHistoryView()
+				}
+				.tabItem {
+					Label("Tilt History", systemImage: "chart.xyaxis.line")
+				}
 				TiltHydrometerView()
 					.tabItem {
 						Label("Tilt Hydrometer", systemImage: "drop")
