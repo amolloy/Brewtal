@@ -14,6 +14,34 @@ struct TiltHydrometerView: View {
     
     var body: some View {
         VStack {
+            Menu {
+                ForEach(TiltHydrometerViewModel.TiltColor.allCases, id: \.self) { color in
+                    Button(action: {
+                        viewModel.setSelectedColor(color)
+                    }) {
+                        if color == viewModel.selectedColor {
+                            Label(color.rawValue.capitalized, systemImage: "checkmark")
+                        } else {
+                            Text(color.rawValue.capitalized)
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(viewModel.selectedColor.rawValue.capitalized)
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.secondary.opacity(0.5))
+                )
+            }
+            .padding(.bottom, 16)
+            
             if let temperature = viewModel.temperature,
                let gravity = viewModel.gravity {
                 Text(String(format: "%.1f°F", temperature))
@@ -30,6 +58,7 @@ struct TiltHydrometerView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
+        .padding()
     }
 }
 

@@ -10,21 +10,73 @@ import CoreLocation
 import Foundation
 
 class TiltHydrometerViewModel: NSObject, ObservableObject, CBCentralManagerDelegate, CLLocationManagerDelegate {
+    enum TiltColor: String, CaseIterable {
+        case black
+        case red
+        case green
+        case yellow
+        case pink
+        case blue
+        case purple
+        case orange
+        
+        var uuid: UUID {
+            switch self {
+            case .black:
+                return UUID(uuidString: "a495bb10-c5b1-4b44-b512-1370f02d74de")!
+            case .red:
+                return UUID(uuidString: "a495bb20-c5b1-4b44-b512-1370f02d74de")!
+            case .green:
+                return UUID(uuidString: "a495bb30-c5b1-4b44-b512-1370f02d74de")!
+            case .yellow:
+                return UUID(uuidString: "a495bb40-c5b1-4b44-b512-1370f02d74de")!
+            case .pink:
+                return UUID(uuidString: "a495bb50-c5b1-4b44-b512-1370f02d74de")!
+            case .blue:
+                return UUID(uuidString: "a495bb60-c5b1-4b44-b512-1370f02d74de")!
+            case .purple:
+                return UUID(uuidString: "a495bb70-c5b1-4b44-b512-1370f02d74de")!
+            case .orange:
+                return UUID(uuidString: "a495bb80-c5b1-4b44-b512-1370f02d74de")!
+            }
+        }
+        
+        static let allColors: [TiltColor] = [.black, .red, .green, .yellow, .pink, .blue, .purple, .orange]
+    }
+    
     @Published var temperature: Double? = nil
     @Published var gravity: Double? = nil
     @Published var status: String = "Initializing..."
-
+    
     private var centralManager: CBCentralManager!
     private var locationManager: CLLocationManager!
     
-    private let tiltUUID = UUID(uuidString: "a495bb30-c5b1-4b44-b512-1370f02d74de")!
-
+    private let selectedColorKey = "SelectedTiltColor"
+    
+    var selectedColor: TiltColor {
+        get {
+            if let stored = UserDefaults.standard.string(forKey: selectedColorKey),
+               let color = TiltColor(rawValue: stored) {
+                return color
+            }
+            return .green // default color
+        }
+        set {
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: selectedColorKey)
+            startScanningForBeacons()
+        }
+    }
+    
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+    }
+    
+    func setSelectedColor(_ color: TiltColor) {
+        selectedColor = color
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -35,9 +87,10 @@ class TiltHydrometerViewModel: NSObject, ObservableObject, CBCentralManagerDeleg
             status = "Bluetooth state: \(central.state.rawValue)"
         }
     }
-
+    
     func startScanningForBeacons() {
-        let beaconRegion = CLBeaconRegion(uuid: tiltUUID, identifier: "Tilt")
+        locationManager.stopRangingBeacons(satisfying: CLBeaconIdentityConstraint(uuid: selectedColor.uuid))
+        let beaconRegion = CLBeaconRegion(uuid: selectedColor.uuid, identifier: "Tilt")
         locationManager.startRangingBeacons(satisfying: beaconRegion.beaconIdentityConstraint)
     }
     
@@ -49,7 +102,7 @@ class TiltHydrometerViewModel: NSObject, ObservableObject, CBCentralManagerDeleg
             return
         }
 
-		temperature = Double(tiltBeacon.major.intValue)
+        temperature = Double(tiltBeacon.major.intValue)
         gravity = Double(tiltBeacon.minor.intValue) / 1000.0
         status = "Received data from Tilt"
     }
